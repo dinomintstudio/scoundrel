@@ -42,7 +42,7 @@ const CardComponent: Component<CardProps> = (props: CardProps) => {
                 </button>
             </Match>
             <Match when={true}>
-                <button type="button" disabled class="card empty" />
+                <button type="button" disabled class="card empty" title={props.title} />
             </Match>
         </Switch>
     )
@@ -213,12 +213,18 @@ const Main: Component = () => {
         <div class="game">
             <header>
                 <span class="title">Scoundrel</span>
-                <span class="description">Online version of a single player rogue-like card game</span>
-                <span class="description">by Zach Gage and Kurt Bieg</span>
+                <span>Online version of a single player rogue-like card game</span>
+                <span class="right">
+                    design by <a href="http://stfj.net/">Zach Gage</a> and{' '}
+                    <a href="https://www.kurtiswow.com/">Kurt Bieg</a>
+                </span>
+                <span class="right">
+                    implementation by <a href="http://substepgames.com/">Substep Games</a>
+                </span>
             </header>
             <div class="piles">
-                <Pile pile={draw} onClick={avoidRoom} />
-                <Pile pile={discard} disabled />
+                <Pile pile={draw} onClick={avoidRoom} title="draw pile" />
+                <Pile pile={discard} disabled title="discard pile" />
             </div>
             <div class="room">
                 <For each={room()}>
@@ -227,7 +233,7 @@ const Main: Component = () => {
             </div>
             <div class="tools">
                 <div class="equipped">
-                    <CardComponent card={activeWeapon()?.card} />
+                    <CardComponent card={activeWeapon()?.card} title="equipped weapon" />
                     <div class="slain">
                         <For each={activeWeapon()?.monsters}>
                             {(monster, i) => <CardComponent card={monster} style={{ left: `${i() * 2}rem` }} />}
@@ -242,14 +248,18 @@ const Main: Component = () => {
                         </tr>
                         <tr>
                             <td>score:</td>
-                            <td>
-                                <Switch>
-                                    <Match when={state() === 'started'}>
+                            <Switch>
+                                <Match when={state() === 'started'}>
+                                    <td class="score">
                                         {score().lost}/{score().won}
-                                    </Match>
-                                    <Match when={true}>{state() === 'won' ? score().won : score().lost}</Match>
-                                </Switch>
-                            </td>
+                                    </td>
+                                </Match>
+                                <Match when={true}>
+                                    <td class="score" title="won/lost score">
+                                        {state() === 'won' ? score().won : score().lost}
+                                    </td>
+                                </Match>
+                            </Switch>
                         </tr>
                         <tr>
                             <td>seed:</td>
