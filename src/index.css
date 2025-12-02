@@ -118,7 +118,6 @@ select {
 #root {
     display: flex;
     justify-content: center;
-    align-items: center;
     overflow: hidden;
 }
 
@@ -126,6 +125,21 @@ select {
     display: flex;
     flex-direction: column;
     gap: 2rem;
+
+    header {
+        display: flex;
+        flex-direction: column;
+
+        .title {
+            font-size: 3rem;
+            text-align: center;
+        }
+
+        .description {
+            font-size: .8rem;
+            text-align: center;
+        }
+    }
 
     .piles {
         display: flex;
@@ -191,24 +205,29 @@ select {
         }
     }
 
-    .equipped {
+    .tools {
         display: flex;
-        gap: 2rem;
+        justify-content: space-between;
 
-        .slain {
-            position: relative;
+        .equipped {
+            display: flex;
+            gap: 2rem;
 
-            .card {
-                position: absolute;
+            .slain {
+                position: relative;
+
+                .card {
+                    position: absolute;
+                }
             }
         }
-    }
 
-    .stats {
-        width: fit-content;
+        .stats {
+            width: fit-content;
 
-        td:last-child {
-            text-align: right;
+            td:last-child {
+                text-align: right;
+            }
         }
     }
 }

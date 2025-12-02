@@ -160,7 +160,12 @@ const Main: Component = () => {
                 break
             }
             case 'potion': {
-                setHealth(Math.min(20, health() + card.value))
+                let health_ = health() + card.value
+                // if this potion is the last remaining card, don't limit it to be counted to score
+                if ([...draw(), ...room()].filter(c => c).length !== 1) {
+                    health_ = Math.min(20, health_)
+                }
+                setHealth(health_)
                 break
             }
         }
@@ -188,7 +193,6 @@ const Main: Component = () => {
         const health_ = health()
         const draw_ = draw()
         const room_ = room()
-        // TODO: count last potion card
         const won = health_
         const lost =
             health_ -
@@ -207,6 +211,11 @@ const Main: Component = () => {
     }
     return (
         <div class="game">
+            <header>
+                <span class="title">Scoundrel</span>
+                <span class="description">Online version of a single player rogue-like card game</span>
+                <span class="description">by Zach Gage and Kurt Bieg</span>
+            </header>
             <div class="piles">
                 <Pile pile={draw} onClick={avoidRoom} />
                 <Pile pile={discard} disabled />
@@ -216,42 +225,44 @@ const Main: Component = () => {
                     {(roomCard, i) => <CardComponent card={roomCard} onClick={e => playCard(i(), e.shiftKey)} />}
                 </For>
             </div>
-            <div class="equipped">
-                <CardComponent card={activeWeapon()?.card} />
-                <div class="slain">
-                    <For each={activeWeapon()?.monsters}>
-                        {(monster, i) => <CardComponent card={monster} style={{ left: `${i() * 2}rem` }} />}
-                    </For>
+            <div class="tools">
+                <div class="equipped">
+                    <CardComponent card={activeWeapon()?.card} />
+                    <div class="slain">
+                        <For each={activeWeapon()?.monsters}>
+                            {(monster, i) => <CardComponent card={monster} style={{ left: `${i() * 2}rem` }} />}
+                        </For>
+                    </div>
                 </div>
+                <table class="stats">
+                    <tbody>
+                        <tr>
+                            <td>health:</td>
+                            <td classList={{ low: health() <= 5 }}>{health()}</td>
+                        </tr>
+                        <tr>
+                            <td>score:</td>
+                            <td>
+                                <Switch>
+                                    <Match when={state() === 'started'}>
+                                        {score().lost}/{score().won}
+                                    </Match>
+                                    <Match when={true}>{state() === 'won' ? score().won : score().lost}</Match>
+                                </Switch>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>seed:</td>
+                            <td>{seed()}</td>
+                        </tr>
+                        <Switch>
+                            <Match when={state() === 'won'}>victory!</Match>
+                            <Match when={state() === 'lost'}>game over!</Match>
+                            <Match when={true}>&nbsp</Match>
+                        </Switch>
+                    </tbody>
+                </table>
             </div>
-            <table class="stats">
-                <tbody>
-                    <tr>
-                        <td>health:</td>
-                        <td classList={{ low: health() <= 5 }}>{health()}</td>
-                    </tr>
-                    <tr>
-                        <td>score:</td>
-                        <td>
-                            <Switch>
-                                <Match when={state() === 'started'}>
-                                    {score().lost}/{score().won}
-                                </Match>
-                                <Match when={true}>{state() === 'won' ? score().won : score().lost}</Match>
-                            </Switch>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>seed:</td>
-                        <td>{seed()}</td>
-                    </tr>
-                    <Switch>
-                        <Match when={state() === 'won'}>victory!</Match>
-                        <Match when={state() === 'lost'}>game over!</Match>
-                        <Match when={true}>&nbsp</Match>
-                    </Switch>
-                </tbody>
-            </table>
         </div>
     )
 }
