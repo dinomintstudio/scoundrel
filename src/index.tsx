@@ -214,13 +214,6 @@ const Main: Component = () => {
             <header>
                 <span class="title">Scoundrel</span>
                 <span>Online version of a single player rogue-like card game</span>
-                <span class="right">
-                    design by <a href="http://stfj.net/">Zach Gage</a> and{' '}
-                    <a href="https://www.kurtiswow.com/">Kurt Bieg</a>
-                </span>
-                <span class="right">
-                    implementation by <a href="http://substepgames.com/">Substep Games</a>
-                </span>
             </header>
             <div class="piles">
                 <Pile pile={draw} onClick={avoidRoom} title="draw pile" />
@@ -240,39 +233,54 @@ const Main: Component = () => {
                         </For>
                     </div>
                 </div>
-                <table class="stats">
-                    <tbody>
-                        <tr>
-                            <td>health:</td>
-                            <td classList={{ low: health() <= 5 }}>{health()}</td>
-                        </tr>
-                        <tr>
-                            <td>score:</td>
+                <div class="stats">
+                    <table>
+                        <tbody>
                             <Switch>
-                                <Match when={state() === 'started'}>
-                                    <td class="score">
-                                        {score().lost}/{score().won}
-                                    </td>
-                                </Match>
-                                <Match when={true}>
-                                    <td class="score" title="won/lost score">
-                                        {state() === 'won' ? score().won : score().lost}
-                                    </td>
-                                </Match>
+                                <Match when={state() === 'won'}>victory!</Match>
+                                <Match when={state() === 'lost'}>game over!</Match>
+                                <Match when={true}>&nbsp</Match>
                             </Switch>
-                        </tr>
-                        <tr>
-                            <td>seed:</td>
-                            <td>{seed()}</td>
-                        </tr>
-                        <Switch>
-                            <Match when={state() === 'won'}>victory!</Match>
-                            <Match when={state() === 'lost'}>game over!</Match>
-                            <Match when={true}>&nbsp</Match>
-                        </Switch>
-                    </tbody>
-                </table>
+                            <tr>
+                                <td>health:</td>
+                                <td classList={{ low: health() <= 5 }}>{health()}</td>
+                            </tr>
+                            <tr>
+                                <td>score:</td>
+                                <Switch>
+                                    <Match when={state() === 'started'}>
+                                        <td class="score">
+                                            {score().lost}/{score().won}
+                                        </td>
+                                    </Match>
+                                    <Match when={true}>
+                                        <td class="score" title="won/lost score">
+                                            {state() === 'won' ? score().won : score().lost}
+                                        </td>
+                                    </Match>
+                                </Switch>
+                            </tr>
+                            <tr>
+                                <td>seed:</td>
+                                <td>{seed()}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
             </div>
+            <footer>
+                <div class="controls">
+                </div>
+                <div class="credits">
+                    <span>
+                        design by <a href="http://stfj.net/">Zach Gage</a> and{' '}
+                        <a href="https://www.kurtiswow.com/">Kurt Bieg</a>
+                    </span>
+                    <span>
+                        implementation by <a href="http://substepgames.com/">Substep Games</a>
+                    </span>
+                </div>
+            </footer>
         </div>
     )
 }

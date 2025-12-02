@@ -135,10 +135,6 @@ select {
         .title {
             font-size: 3rem;
         }
-
-        .right {
-            text-align: right;
-        }
     }
 
     .piles {
@@ -223,7 +219,8 @@ select {
         }
 
         .stats {
-            width: fit-content;
+            display: flex;
+            align-items: flex-end;
 
             td:last-child {
                 text-align: right;
@@ -232,6 +229,24 @@ select {
             .score {
                 min-width: 6ch;
             }
+        }
+    }
+
+    footer {
+        display: flex;
+        font-size: .8rem;
+        justify-content: space-between;
+
+        .controls, .credits {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .controls {
+        }
+
+        .credits {
+            text-align: right;
         }
     }
 }
