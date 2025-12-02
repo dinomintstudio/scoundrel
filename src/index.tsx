@@ -54,7 +54,12 @@ type PileProps = {
 } & JSX.ButtonHTMLAttributes<HTMLButtonElement>
 const Pile: Component<PileProps> = (props: PileProps) => {
     return (
-        <button type="button" class="pile" {...props} classList={{ empty: props.pile().length === 0 }}>
+        <button
+            type="button"
+            class="pile"
+            {...props}
+            classList={{ ...props.classList, empty: props.pile().length === 0 }}
+        >
             <span>{props.pile().length}</span>
         </button>
     )
@@ -69,8 +74,8 @@ const Main: Component = () => {
     const [health, setHealth] = createSignal(20)
     const [lastRoomAvoided, setLastRoomAvoided] = createSignal(false)
     const [activeWeapon, setActiveWeapon] = createSignal<ActiveWeapon | undefined>()
+    const [barehandMode, setBarehandMode] = createSignal(false)
     onMount(() => {
-        setSeed(Math.floor(Math.random() * 100_000))
         startGame()
         document.addEventListener('keydown', e => {
             const alternate = e.shiftKey
@@ -101,6 +106,8 @@ const Main: Component = () => {
         })
     })
     const startGame = () => {
+        setSeed(Math.floor(Math.random() * 100_000))
+
         const deck = createDeck()
         shuffle(deck, seed())
         setDraw(deck)
@@ -149,9 +156,10 @@ const Main: Component = () => {
 
         switch (card.type) {
             case 'monster': {
-                if (alternative) {
+                if (alternative || barehandMode()) {
                     // barehanded
                     setHealth(health() - card.value)
+                    setBarehandMode(false)
                 } else {
                     // with weapon
                     const activeWeapon_ = activeWeapon()
@@ -245,8 +253,13 @@ const Main: Component = () => {
                 <span class="title">Scoundrel</span>
             </header>
             <div class="piles">
-                <Pile pile={draw} onClick={avoidRoom} title="draw pile" />
-                <Pile pile={discard} disabled title="discard pile" />
+                <Pile pile={draw} onClick={avoidRoom} title={'draw pile\navoid room'} />
+                <Pile
+                    pile={discard}
+                    classList={{ barehand: barehandMode() }}
+                    onClick={() => setBarehandMode(!barehandMode())}
+                    title={'discard pile\ntoggle barehand mode'}
+                />
             </div>
             <div class="room">
                 <For each={room()}>
@@ -255,7 +268,7 @@ const Main: Component = () => {
             </div>
             <div class="tools">
                 <div class="equipped">
-                    <CardComponent card={activeWeapon()?.card} title="equipped weapon" />
+                    <CardComponent card={activeWeapon()?.card} disabled title="equipped weapon" />
                     <div class="slain">
                         <For each={activeWeapon()?.monsters}>
                             {(monster, i) => <CardComponent card={monster} style={{ left: `${i() * 2}rem` }} />}

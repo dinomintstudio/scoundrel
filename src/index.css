@@ -92,6 +92,7 @@ button {
     color: var(--fg);
     border-width: 1px;
     font-size: 1rem;
+    outline: none;
 
     &:hover {
         border-color: var(--special);
@@ -157,6 +158,10 @@ select {
 
             &.empty {
                 color: var(--bg3);
+            }
+
+            &.barehand {
+                color: var(--monster);
             }
         }
     }
