@@ -3,6 +3,7 @@ import { Accessor, Component, For, JSX, Match, Switch, createSignal, onMount } f
 import { render } from 'solid-js/web'
 import { shuffle } from './array'
 import './index.css'
+import rules from './assets/rules.txt'
 
 type State = 'started' | 'lost' | 'won'
 
@@ -270,6 +271,22 @@ const Main: Component = () => {
             </div>
             <footer>
                 <div class="controls">
+                    <span>keyboard controls:</span>
+                    <span>
+                        <pre>R</pre> restart
+                    </span>
+                    <span>
+                        <pre>A</pre> avoid room
+                    </span>
+                    <span>
+                        <pre>1</pre>/<pre>2</pre>/<pre>3</pre>/<pre>4</pre> play card
+                    </span>
+                    <span>
+                        <pre>H</pre>/<pre>J</pre>/<pre>K</pre>/<pre>L</pre> play card
+                    </span>
+                    <span>
+                        play+<pre>Shift</pre> barehand
+                    </span>
                 </div>
                 <div class="credits">
                     <span>
@@ -278,6 +295,10 @@ const Main: Component = () => {
                     </span>
                     <span>
                         implementation by <a href="http://substepgames.com/">Substep Games</a>
+                    </span>
+                    <span>
+                        <a href={rules}>rules</a> (<a href="http://stfj.net/art/2011/Scoundrel.pdf">original</a>,{' '}
+                        <a href="https://youtu.be/Gt2tYzM93h4">video</a>)
                     </span>
                 </div>
             </footer>
