@@ -1,25 +1,16 @@
 @import url('https://fonts.googleapis.com/css2?family=Cantarell:wght@300;400;700&display=swap');
 
 :root {
-    --bg: #ffffff;
-    --bg2: #f6f6f6;
-    --bg3: #dddddd;
-    --fg: #000000;
-    --fg2: #111111;
-    --fg3: #444444;
-    --special: #c955e7;
-}
-
-@media (prefers-color-scheme: dark) {
-    :root {
-        --bg: #111111;
-        --bg2: #151515;
-        --bg3: #333333;
-        --fg: #ffffff;
-        --fg2: #eeeeee;
-        --fg3: #aaaaaa;
-        --special: #e975ff;
-    }
+    --bg: #111111;
+    --bg2: #151515;
+    --bg3: #333333;
+    --fg: #ffffff;
+    --fg2: #eeeeee;
+    --fg3: #aaaaaa;
+    --special: #33a1fd;
+    --weapon: #fdca40;
+    --potion: #ff6663;
+    --monster: #b18dfe;
 }
 
 body {
@@ -41,7 +32,7 @@ body,
 }
 
 * {
-    font-family: 'Space Mono', monospace;
+    font-family: 'Cantarell', sans-serif;
     font-variant-ligatures: none;
     border-width: 0;
     border-style: solid;
@@ -126,43 +117,99 @@ select {
 
 #root {
     display: flex;
-    flex-direction: column;
+    justify-content: center;
+    align-items: center;
     overflow: hidden;
 }
 
-.header {
-    display: flex;
-    align-items: center;
-    gap: .5rem;
-    padding: .1rem;
-
-    .section {
-        display: flex;
-        align-items: center;
-        gap: .2rem;
-    }
-
-    .path {
-        white-space: nowrap;
-        overflow-x: auto;
-    }
-}
-
-.directory {
-    width: 100%;
+.game {
     display: flex;
     flex-direction: column;
-    overflow: auto;
-}
+    gap: 2rem;
 
-.rendered {
-    overflow: auto;
-}
+    .piles {
+        display: flex;
+        justify-content: space-between;
 
-textarea {
-    height: 100%;
-    margin: 0;
-    padding: 1ch;
-    border-width: 0;
-    resize: none;
+        .pile {
+            display: flex;
+            width: 7rem;
+            height: 7rem;
+            background-color: var(--bg);
+            color: var(--fg3);
+            border: 2px solid;
+            font-size: 1.5rem;
+            cursor: pointer;
+            user-select: none;
+
+            span {
+                margin: 0.5rem;
+            }
+
+            &.empty {
+                color: var(--bg3);
+            }
+        }
+    }
+
+    .room {
+        display: flex;
+        align-items: center;
+        gap: 2rem;
+    }
+
+    .card {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        border: 2px solid;
+        width: 7rem;
+        height: 7rem;
+        font-size: 1.5rem;
+        cursor: pointer;
+        user-select: none;
+
+        .value {
+            font-size: 2.5rem;
+        }
+
+        &.empty {
+            color: var(--bg3);
+        }
+
+        &.monster {
+            color: var(--monster);
+        }
+
+        &.potion {
+            color: var(--potion);
+        }
+
+        &.weapon {
+            color: var(--weapon);
+        }
+    }
+
+    .equipped {
+        display: flex;
+        gap: 2rem;
+
+        .slain {
+            position: relative;
+
+            .card {
+                position: absolute;
+            }
+        }
+    }
+
+    .stats {
+        width: fit-content;
+
+        td:last-child {
+            padding-left: 1ch;
+            text-align: right;
+        }
+    }
 }
