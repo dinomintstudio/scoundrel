@@ -1,5 +1,5 @@
 /* @refresh reload */
-import { Accessor, Component, For, JSX, Match, Switch, createSignal, onMount } from 'solid-js'
+import { Accessor, Component, For, JSX, Match, Show, Switch, createSignal, onMount } from 'solid-js'
 import { render } from 'solid-js/web'
 import { shuffled } from './array'
 import rules from './assets/rules.txt'
@@ -75,6 +75,7 @@ const Main: Component = () => {
     const [lastRoomAvoided, setLastRoomAvoided] = createSignal(false)
     const [activeWeapon, setActiveWeapon] = createSignal<ActiveWeapon | undefined>()
     const [barehandMode, setBarehandMode] = createSignal(false)
+    const [drawDetail, setDrawDetail] = createSignal(false)
     onMount(() => {
         startGame()
         document.addEventListener('keydown', e => {
@@ -85,6 +86,9 @@ const Main: Component = () => {
                     break
                 case 'KeyA':
                     avoidRoom()
+                    break
+                case 'KeyD':
+                    setDrawDetail(!drawDetail())
                     break
                 case 'Digit1':
                 case 'KeyH':
@@ -243,13 +247,51 @@ const Main: Component = () => {
                 return { won }
         }
     }
+    const details = () => {
+        const fitValues = 7
+        const draw_ = draw()
+        return ['monster', 'weapon', 'potion'].map(type => {
+            const values = draw_
+                .filter(c => c.type === type)
+                .map(c => c.value)
+                .toSorted((a, b) => b - a)
+
+            return {
+                type,
+                top: values.slice(0, fitValues),
+                plusCount: values.length > fitValues ? values.length - fitValues : undefined
+            }
+        })
+    }
     return (
         <div class="game">
             <header>
                 <span class="title">Scoundrel</span>
             </header>
             <div class="piles">
-                <Pile pile={draw} onClick={avoidRoom} title={'draw pile\navoid room'} />
+                <div class="left">
+                    <Pile pile={draw} onClick={avoidRoom} title={'draw pile\navoid room'} />
+                    <Show when={drawDetail()}>
+                        <div class="details">
+                            <For each={details()}>
+                                {detail => (
+                                    <div class="detail">
+                                        <For each={detail.top}>
+                                            {value => (
+                                                <span class="value" classList={{ [detail.type]: true }}>
+                                                    {value}
+                                                </span>
+                                            )}
+                                        </For>
+                                        <Show when={detail.plusCount}>
+                                            <span>+{detail.plusCount}</span>
+                                        </Show>
+                                    </div>
+                                )}
+                            </For>
+                        </div>
+                    </Show>
+                </div>
                 <Pile
                     pile={discard}
                     classList={{ barehand: barehandMode() }}
@@ -293,12 +335,12 @@ const Main: Component = () => {
                         <label>score:</label>
                         <Switch>
                             <Match when={state() === 'started'}>
-                                <span>
+                                <span title="won/lost score">
                                     {score().lost}/{score().won}
                                 </span>
                             </Match>
                             <Match when={true}>
-                                <span title="won/lost score">{state() === 'won' ? score().won : score().lost}</span>
+                                <span>{state() === 'won' ? score().won : score().lost}</span>
                             </Match>
                         </Switch>
                     </p>
@@ -328,6 +370,9 @@ const Main: Component = () => {
                     </span>
                     <span>
                         <pre>B</pre> toggle barehand
+                    </span>
+                    <span>
+                        <pre>D</pre> toggle draw contents
                     </span>
                 </div>
                 <div class="credits">
