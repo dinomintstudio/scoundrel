@@ -1,7 +1,7 @@
 /* @refresh reload */
 import { Accessor, Component, For, JSX, Match, Switch, createSignal, onMount } from 'solid-js'
 import { render } from 'solid-js/web'
-import { shuffle } from './array'
+import { shuffled } from './array'
 import rules from './assets/rules.txt'
 import './index.css'
 
@@ -111,8 +111,7 @@ const Main: Component = () => {
     const startGame = () => {
         setSeed(Math.floor(Math.random() * 100_000))
 
-        const deck = createDeck()
-        shuffle(deck, seed())
+        const deck = shuffled(createDeck(), seed())
         setDraw(deck)
 
         setDiscard([])
